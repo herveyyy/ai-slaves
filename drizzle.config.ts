@@ -1,8 +1,11 @@
-// drizzle.config.ts
-// Drizzle ORM configuration
-// Configure migrations and database connection
+import "dotenv/config";
+import { defineConfig } from "drizzle-kit";
 
-export default {
-    // TODO: Configure Drizzle
-    // Reference: https://orm.drizzle.team/docs/get-started
-};
+export default defineConfig({
+    out: "./drizzle",
+    schema: "./src/infra/db/schema.ts",
+    dialect: "sqlite",
+    dbCredentials: {
+        url: process.env.DB_FILE_NAME!,
+    },
+});
