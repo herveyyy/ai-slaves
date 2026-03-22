@@ -2,38 +2,24 @@ import { drizzle } from "drizzle-orm/libsql";
 import { createClient } from "@libsql/client";
 import * as schema from "./schema";
 import "dotenv/config";
-export class DatabaseClient {
-    private static instance: ReturnType<typeof drizzle<typeof schema>>;
-    public static getInstance() {
-        if (!this.instance) {
-            const url = process.env.DB_FILE_NAME;
 
-            if (!url) {
-                throw new Error(
-                    "❌ DB_FILE_NAME is missing in .env. Example: file:local.db",
-                );
-            }
+const url = process.env.DB_FILE_NAME;
+if (!url) throw new Error("❌ DB_FILE_NAME is missing");
 
-            const client = createClient({ url });
-            this.instance = drizzle(client, { schema });
+const client = createClient({ url });
 
-            console.log("🐘 Database Client: Online (SQLite/LibSQL)");
-        }
-        return this.instance;
-    }
+// Exporting 'db' directly is the standard Drizzle pattern
+export const db = drizzle(client, { schema });
 
+// You can keep the class for testing/utility if you want
+export class DatabaseUtils {
     public static async test() {
         try {
-            const db = this.getInstance();
             const result = await db.select().from(schema.agents).limit(1);
-            console.log("✅ DB Test Query Result:", result);
             return true;
         } catch (e) {
-            console.error("🚨 DB Connection Failed:", e);
+            console.error(e);
             return false;
         }
     }
 }
-
-// Export the live DB instance
-export const db = DatabaseClient.getInstance();

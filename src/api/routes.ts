@@ -1,0 +1,68 @@
+// src/api/router.ts
+
+import { ActionLogsController } from "./controllers/actionLogs";
+import { AgentSkillsController } from "./controllers/agentSkills";
+import { MemoriesController } from "./controllers/memories";
+import { ProcessesController } from "./controllers/processes";
+import { AgentsController } from "./controllers/agents/agents.controller";
+import { AgentsService } from "./services/agents.service";
+import { GetAgentsUseCase } from "./usecase/agents/get_agents.usecase";
+import { ROUTE_METADATA } from "./decorators/http.decorator";
+
+export class ApiRouter {
+    private controllers: Record<string, any>;
+
+    constructor() {
+        const agentsService = new AgentsService(new GetAgentsUseCase());
+
+        this.controllers = {
+            agents: new AgentsController(agentsService),
+            // processes: new ProcessesController(),
+            // memories: new MemoriesController(),
+            // actionLogs: new ActionLogsController(),
+            // agentSkills: new AgentSkillsController(),
+        };
+    }
+
+    // src/api/router.ts
+    async handleRequest(request: Request): Promise<Response> {
+        const url = new URL(request.url);
+        const pathParts = url.pathname.split("/").filter(Boolean);
+        const resource = pathParts[2];
+        if (!resource) return this.error("Resource Not Found", 404);
+        const controller = this.controllers[resource];
+        if (!controller) return this.error("Resource Not Found", 404);
+        const fullPathTail = "/" + pathParts.slice(3).join("/");
+
+        const routes: any[] =
+            Reflect.getMetadata(ROUTE_METADATA, controller.constructor) || [];
+        const method = request.method.toLowerCase();
+
+        // 3. Regex Matching Engine
+        for (const route of routes) {
+            if (route.method !== method) continue;
+
+            const pattern = route.path
+                .replace(/\//g, "\\/") // Escape slashes
+                .replace(/:[^/]+/g, "([^/]+)"); // Capture segments
+
+            const regex = new RegExp(`^${pattern}$`);
+            const match = fullPathTail.match(regex);
+
+            if (match) {
+                // Extract the captured variables (id, status, etc.)
+                const params = match.slice(1);
+                return await controller[route.methodName](request, ...params);
+            }
+        }
+
+        return this.error("Route Not Found", 404);
+    }
+
+    error(message: string, status: number): Response {
+        return new Response(JSON.stringify({ error: message }), {
+            status,
+            headers: { "Content-Type": "application/json" },
+        });
+    }
+}
