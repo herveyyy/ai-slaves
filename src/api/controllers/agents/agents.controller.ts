@@ -15,7 +15,6 @@ export class AgentsController implements IAgents {
     @Get("/")
     async getAll(request: Request): Promise<Response> {
         try {
-            console.log("sadsadasd");
             return await this._agentsService.fetchAll(request);
         } catch (error) {
             console.error("Error fetching agents:", error);
@@ -29,9 +28,21 @@ export class AgentsController implements IAgents {
         }
     }
 
-    // GET /api/v1/agents/:id
     @Get("/:id")
-    async getById(request: Request, id: string): Promise<Response> {}
+    async getById(request: Request, id: string): Promise<Response> {
+        try {
+            return await this._agentsService.fetchById(request, id);
+        } catch (error) {
+            console.error("Error fetching agent by id:", error);
+            return new Response(
+                JSON.stringify({ error: "Internal server error" }),
+                {
+                    status: 500,
+                    headers: { "Content-Type": "application/json" },
+                },
+            );
+        }
+    }
 
     // POST /api/v1/agents
     @Post("/")

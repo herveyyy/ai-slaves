@@ -7,13 +7,21 @@ import { ProcessesController } from "./controllers/processes";
 import { AgentsController } from "./controllers/agents/agents.controller";
 import { AgentsService } from "./services/agents.service";
 import { GetAgentsUseCase } from "./usecase/agents/get_agents.usecase";
+import { GetAgentByIdUseCase } from "./usecase/agents/get_agent_by_id.usecase";
 import { ROUTE_METADATA } from "./decorators/http.decorator";
+import { CreateAgentUseCase } from "./usecase/agents/create_agent.usecase";
+import { UpdateAgentUseCase } from "./usecase/agents/update_agent.usecase";
 
 export class ApiRouter {
     private controllers: Record<string, any>;
 
     constructor() {
-        const agentsService = new AgentsService(new GetAgentsUseCase());
+        const agentsService = new AgentsService(
+            new GetAgentsUseCase(),
+            new GetAgentByIdUseCase(),
+            new CreateAgentUseCase(),
+            new UpdateAgentUseCase(),
+        );
 
         this.controllers = {
             agents: new AgentsController(agentsService),
@@ -24,7 +32,6 @@ export class ApiRouter {
         };
     }
 
-    // src/api/router.ts
     async handleRequest(request: Request): Promise<Response> {
         const url = new URL(request.url);
         const pathParts = url.pathname.split("/").filter(Boolean);
