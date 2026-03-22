@@ -2,6 +2,6 @@
 // 💬 Communication tools
 // Slack, email, search, logging
 
-export const communication = {
-    // TODO: Implement communication tools
-};
+export class CommunicationTools {
+    constructor() {}
+}
