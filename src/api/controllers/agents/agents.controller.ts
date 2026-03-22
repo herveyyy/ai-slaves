@@ -48,38 +48,11 @@ export class AgentsController implements IAgents {
     @Post("/")
     async create(request: Request): Promise<Response> {
         try {
-            const body = (await request.json()) as AgentInsert;
-
-            // Basic validation
-            if (!body.accountIndex || !body.role) {
-                return new Response(
-                    JSON.stringify({
-                        error: "accountIndex and role are required",
-                    }),
-                    {
-                        status: 400,
-                        headers: { "Content-Type": "application/json" },
-                    },
-                );
-            }
-
-            const result = await this.db
-                .insert(agents)
-                .values(body)
-                .returning();
-
-            return new Response(JSON.stringify(result[0]), {
-                status: 201,
-                headers: { "Content-Type": "application/json" },
-            });
+            const req = (await request.json()) as AgentInsert;
+            return await this._agentsService.create(req);
         } catch (error) {
-            console.error("Error creating agent:", error);
             return new Response(
                 JSON.stringify({ error: "Internal server error" }),
-                {
-                    status: 500,
-                    headers: { "Content-Type": "application/json" },
-                },
             );
         }
     }
@@ -87,36 +60,11 @@ export class AgentsController implements IAgents {
     @Put("/:id")
     async update(request: Request, id: string): Promise<Response> {
         try {
-            const body = (await request.json()) as Partial<AgentInsert>;
-
-            const result = await this.db
-                .update(agents)
-                .set(body)
-                .where(eq(agents.id, parseInt(id)))
-                .returning();
-
-            if (result.length === 0) {
-                return new Response(
-                    JSON.stringify({ error: "Agent not found" }),
-                    {
-                        status: 404,
-                        headers: { "Content-Type": "application/json" },
-                    },
-                );
-            }
-
-            return new Response(JSON.stringify(result[0]), {
-                status: 200,
-                headers: { "Content-Type": "application/json" },
-            });
+            const req = (await request.json()) as AgentInsert;
+            return await this._agentsService.create(req);
         } catch (error) {
-            console.error("Error updating agent:", error);
             return new Response(
                 JSON.stringify({ error: "Internal server error" }),
-                {
-                    status: 500,
-                    headers: { "Content-Type": "application/json" },
-                },
             );
         }
     }
@@ -124,36 +72,11 @@ export class AgentsController implements IAgents {
     @Delete("/:id")
     async delete(request: Request, id: string): Promise<Response> {
         try {
-            const result = await this.db
-                .delete(agents)
-                .where(eq(agents.id, parseInt(id)))
-                .returning();
-
-            if (result.length === 0) {
-                return new Response(
-                    JSON.stringify({ error: "Agent not found" }),
-                    {
-                        status: 404,
-                        headers: { "Content-Type": "application/json" },
-                    },
-                );
-            }
-
-            return new Response(
-                JSON.stringify({ message: "Agent deleted successfully" }),
-                {
-                    status: 200,
-                    headers: { "Content-Type": "application/json" },
-                },
-            );
+            const req = (await request.json()) as AgentInsert;
+            return await this._agentsService.create(req);
         } catch (error) {
-            console.error("Error deleting agent:", error);
             return new Response(
                 JSON.stringify({ error: "Internal server error" }),
-                {
-                    status: 500,
-                    headers: { "Content-Type": "application/json" },
-                },
             );
         }
     }
