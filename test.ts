@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { DatabaseClient } from "./src/infra/db/client";
+import { DatabaseUtils } from "./src/infra/db/client";
 
 async function runDiagnostic() {
     console.log("---------------------------------------");
@@ -8,13 +8,13 @@ async function runDiagnostic() {
     console.log(`📂 Target: ${process.env.DB_FILE_NAME}`);
 
     try {
-        const isHealthy = await DatabaseClient.test();
+        const isHealthy = await DatabaseUtils.test();
 
         if (isHealthy) {
             console.log("\n✅ SUCCESS: Connection established.");
             console.log("🚀 Your Drizzle client is ready for queries.");
         } else {
-            console.log("\n❌ FAILED: DatabaseClient.test() returned false.");
+            console.log("\n❌ FAILED: DatabaseUtils.test() returned false.");
         }
     } catch (error) {
         console.error("\n🚨 CRITICAL ERROR during execution:");
