@@ -3,7 +3,14 @@
 // HTTP + WebSocket gateway
 
 import { ApiRouter } from "../api/routes";
+import { spawn } from "bun";
+export async function startDrizzleStudio() {
+    const proc = spawn(["bunx", "drizzle-kit", "studio"], {
+        stdio: ["inherit", "inherit", "inherit"],
+    });
 
+    await proc.exited;
+}
 export function startServer() {
     const apiRouter = new ApiRouter();
 
@@ -30,11 +37,11 @@ export function startServer() {
             });
         },
     });
-
     console.log(`🚀 Server running on ${server.url}`);
 }
 
 // Start the server when this file is run directly
 if (import.meta.main) {
+    startDrizzleStudio();
     startServer();
 }
