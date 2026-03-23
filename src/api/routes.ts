@@ -1,6 +1,6 @@
 // src/api/router.ts
 
-import { ActionLogsController } from "./controllers/actionLogs";
+import { ActionLogsController } from "./controllers/actionLogs/actionLogs.controller";
 import { AgentSkillsController } from "./controllers/agentSkills";
 import { MemoriesController } from "./controllers/memories";
 import { ProcessesController } from "./controllers/processes";
@@ -11,6 +11,12 @@ import { GetAgentByIdUseCase } from "./usecase/agents/get_agent_by_id.usecase";
 import { ROUTE_METADATA } from "./decorators/http.decorator";
 import { CreateAgentUseCase } from "./usecase/agents/create_agent.usecase";
 import { UpdateAgentUseCase } from "./usecase/agents/update_agent.usecase";
+import { CreateActionLogsUseCase } from "./usecase/action_logs/create_action_logs.usecase";
+import { ActionLogsService } from "./services/actionLogs.service";
+import { GetAllActionLogsUseCase } from "./usecase/action_logs/get_all_action_logs.usecase";
+import { DeleteAgentUseCase } from "./usecase/agents/delete_agent.usecase";
+import { GetActionLogsByIdUseCase } from "./usecase/action_logs/get_action_logs_by_id.usecase";
+import { UpdateActionLogsUseCase } from "./usecase/action_logs/update_action_logs.usecase";
 
 export class ApiRouter {
     private controllers: Record<string, any>;
@@ -21,13 +27,19 @@ export class ApiRouter {
             new GetAgentByIdUseCase(),
             new CreateAgentUseCase(),
             new UpdateAgentUseCase(),
+            new DeleteAgentUseCase(),
         );
-
+        const actionLogsService = new ActionLogsService(
+            new CreateActionLogsUseCase(),
+            new GetAllActionLogsUseCase(),
+            new GetActionLogsByIdUseCase(),
+            new UpdateActionLogsUseCase(),
+        );
         this.controllers = {
             agents: new AgentsController(agentsService),
             // processes: new ProcessesController(),
             // memories: new MemoriesController(),
-            // actionLogs: new ActionLogsController(),
+            actionLogs: new ActionLogsController(actionLogsService),
             // agentSkills: new AgentSkillsController(),
         };
     }

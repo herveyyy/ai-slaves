@@ -1,15 +1,11 @@
 // src/api/controllers/agents.ts
 // CRUD operations for agents table
 
-import { eq } from "drizzle-orm";
-import { agents } from "../../../infra/db/schema";
-import { db } from "../../../infra/db/client";
 import type { AgentInsert } from "../../../shared/types";
 import type { IAgents } from "./agents.interface";
 import { AgentsService } from "../../services/agents.service";
 import { Delete, Get, Post, Put } from "../../decorators/http.decorator";
 export class AgentsController implements IAgents {
-    private db = db;
     constructor(private readonly _agentsService: AgentsService) {}
 
     @Get("/")
@@ -70,10 +66,9 @@ export class AgentsController implements IAgents {
     }
 
     @Delete("/:id")
-    async delete(request: Request, id: string): Promise<Response> {
+    async delete(id: string): Promise<Response> {
         try {
-            const req = (await request.json()) as AgentInsert;
-            return await this._agentsService.create(req);
+            return await this._agentsService.delete(id);
         } catch (error) {
             return new Response(
                 JSON.stringify({ error: "Internal server error" }),

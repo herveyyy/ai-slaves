@@ -8,6 +8,13 @@
       "when": 1774172199780,
       "tag": "0000_pretty_doctor_octopus",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1774270428945,
+      "tag": "0001_chief_human_torch",
+      "breakpoints": true
     }
   ]
 }

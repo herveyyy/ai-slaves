@@ -4,6 +4,7 @@ import { GetAgentsUseCase } from "../usecase/agents/get_agents.usecase";
 import type { CreateAgentUseCase } from "../usecase/agents/create_agent.usecase";
 import type { AgentInsert } from "../../shared/types";
 import type { UpdateAgentUseCase } from "../usecase/agents/update_agent.usecase";
+import type { DeleteAgentUseCase } from "../usecase/agents/delete_agent.usecase";
 
 export class AgentsService {
     constructor(
@@ -11,6 +12,7 @@ export class AgentsService {
         private readonly _get_agent_by_id: GetAgentByIdUseCase,
         private readonly _create_agent: CreateAgentUseCase,
         private readonly _update_agent: UpdateAgentUseCase,
+        private readonly _delete_agent: DeleteAgentUseCase,
     ) {}
 
     async fetchAll(request: Request): Promise<Response> {
@@ -24,5 +26,8 @@ export class AgentsService {
     }
     async update(request: Request, id: string): Promise<Response> {
         return await this._update_agent.execute(request, id);
+    }
+    async delete(id: string): Promise<Response> {
+        return await this._delete_agent.execute(id);
     }
 }
