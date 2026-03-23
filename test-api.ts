@@ -10,7 +10,17 @@ async function testAPI() {
             agentsResponse.status,
             await agentsResponse.json(),
         );
-
+        // Test GET by ID
+        console.log("\n--- Testing GET /agents/:id ---");
+        const agentId = "1";
+        const getByIdResponse = await fetch(
+            `${baseURL}/api/v1/agents/${agentId}`,
+        );
+        console.log(
+            "Status:",
+            getByIdResponse.status,
+            await getByIdResponse.json(),
+        );
         // 2. Test Deep Path GET (The / / / / / / test)
         console.log("\n--- Testing Deep Path /agents/processes/101/true ---");
         const deepResponse = await fetch(
@@ -29,6 +39,7 @@ async function testAPI() {
                 status: "active",
             }),
         });
+
         console.log(
             "Status:",
             createResponse.status,

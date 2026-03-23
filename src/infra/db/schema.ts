@@ -14,6 +14,7 @@ export const agentSkills = sqliteTable("agent_skills", {
     agentId: integer("agent_id").references(() => agents.id),
     skillName: text("skill_name").notNull(),
     isAllowed: integer("is_allowed", { mode: "boolean" }).default(true),
+    status: text("status").default("active"),
 });
 
 export const processes = sqliteTable("processes", {
@@ -39,6 +40,7 @@ export const memories = sqliteTable("memories", {
     createdAt: integer("created_at", { mode: "timestamp" }).$defaultFn(
         () => new Date(),
     ),
+    status: text("status").default("active"),
 });
 
 export const actionLogs = sqliteTable("action_logs", {
