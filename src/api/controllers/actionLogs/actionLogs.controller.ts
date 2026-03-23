@@ -1,16 +1,12 @@
 // src/api/controllers/actionLogs.ts
 // CRUD operations for action_logs table
 
-import { eq, and, SQL } from "drizzle-orm";
-import { actionLogs } from "../../../infra/db/schema";
-import { db } from "../../../infra/db/client";
 import type { ActionLogInsert } from "../../../shared/types";
 import type { IActionLogs } from "./actionLogs.interface";
 import type { ActionLogsService } from "../../services/actionLogs.service";
-import { Delete, Get, Post, Put } from "../../decorators/http.decorator";
+import { Get, Post, Put } from "../../decorators/http.decorator";
 
 export class ActionLogsController implements IActionLogs {
-    private db = db;
     constructor(private readonly _action_logs_service: ActionLogsService) {}
 
     @Get("/")
