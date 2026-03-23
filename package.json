@@ -1,22 +1,29 @@
 {
-  "name": "ai-workflow",
-  "module": "index.ts",
-  "type": "module",
-  "private": true,
-  "devDependencies": {
-    "@types/bun": "latest",
-    "@types/reflect-metadata": "^0.1.0",
-    "drizzle-kit": "^0.31.10",
-    "tsx": "^4.21.0"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
-  },
-  "dependencies": {
-    "@libsql/client": "^0.17.2",
-    "dotenv": "^17.3.1",
-    "drizzle-orm": "^0.45.1",
-    "postgres": "^3.4.8",
-    "reflect-metadata": "^0.2.2"
-  }
+    "name": "ai-workflow",
+    "module": "index.ts",
+    "type": "module",
+    "private": true,
+    "scripts": {
+        "server": "bun run src/infra/main.ts",
+        "test-api": "bun run test-api.ts",
+        "app": "bun run src/app/engine.ts",
+        "db:studio": "drizzle-kit studio",
+        "lint": "eslint"
+    },
+    "devDependencies": {
+        "@types/bun": "latest",
+        "@types/reflect-metadata": "^0.1.0",
+        "drizzle-kit": "^0.31.10",
+        "tsx": "^4.21.0"
+    },
+    "peerDependencies": {
+        "typescript": "^5"
+    },
+    "dependencies": {
+        "@libsql/client": "^0.17.2",
+        "dotenv": "^17.3.1",
+        "drizzle-orm": "^0.45.1",
+        "postgres": "^3.4.8",
+        "reflect-metadata": "^0.2.2"
+    }
 }
