@@ -1,7 +1,7 @@
 // src/api/router.ts
 
 import { ActionLogsController } from "./controllers/actionLogs/actionLogs.controller";
-import { AgentSkillsController } from "./controllers/agentSkills";
+import { AgentSkillsController } from "./controllers/agentSkills/agentSkills.controller";
 import { MemoriesController } from "./controllers/memories";
 import { ProcessesController } from "./controllers/processes";
 import { AgentsController } from "./controllers/agents/agents.controller";
@@ -17,6 +17,12 @@ import { GetAllActionLogsUseCase } from "./usecase/action_logs/get_all_action_lo
 import { DeleteAgentUseCase } from "./usecase/agents/delete_agent.usecase";
 import { GetActionLogsByIdUseCase } from "./usecase/action_logs/get_action_logs_by_id.usecase";
 import { UpdateActionLogsUseCase } from "./usecase/action_logs/update_action_logs.usecase";
+import { AgentSkillsService } from "./services/agentSkills.service";
+import { CreateAgentSkillsUseCase } from "./usecase/agent_skills/create_agent_skills.usecase";
+import { DeleteAgentSkillsUseCase } from "./usecase/agent_skills/delete_agent_skills.usecase";
+import { GetAllAgentSkillsUseCase } from "./usecase/agent_skills/get_all_agent_skills.usecase";
+import { GetByIdAgentSkillsUseCase } from "./usecase/agent_skills/get_by_id_agent_skills.usecase";
+import { UpdateAgentSkillsUseCase } from "./usecase/agent_skills/update_agent_skills.usecase";
 
 export class ApiRouter {
     private controllers: Record<string, any>;
@@ -35,12 +41,19 @@ export class ApiRouter {
             new GetActionLogsByIdUseCase(),
             new UpdateActionLogsUseCase(),
         );
+        const agentSkillsService = new AgentSkillsService(
+            new GetAllAgentSkillsUseCase(),
+            new GetByIdAgentSkillsUseCase(),
+            new CreateAgentSkillsUseCase(),
+            new UpdateAgentSkillsUseCase(),
+            new DeleteAgentSkillsUseCase(),
+        );
         this.controllers = {
             agents: new AgentsController(agentsService),
             // processes: new ProcessesController(),
             // memories: new MemoriesController(),
             actionLogs: new ActionLogsController(actionLogsService),
-            // agentSkills: new AgentSkillsController(),
+            agentSkills: new AgentSkillsController(agentSkillsService),
         };
     }
 
