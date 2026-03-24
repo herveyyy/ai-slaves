@@ -134,6 +134,105 @@ async function testActionLogs() {
         console.error("🚨 Action Logs test failed:", error);
     }
 }
+async function testAgentSkills() {
+    const baseURL = "http://localhost:3000";
+
+    try {
+        // First, get an agent to use valid ID
+        const agentsResponse = await fetch(`${baseURL}/api/v1/agents`);
+        const agents = await agentsResponse.json();
+
+        if (!Array.isArray(agents) || agents.length === 0) {
+            console.log("\n⚠️  No agents found. Create an agent first.");
+            return;
+        }
+
+        const agentId = agents[0].id;
+        console.log("\n=== AGENT SKILLS TESTS ===");
+        console.log("Using Agent ID:", agentId);
+
+        // 1. Test GET all agent skills
+        console.log("\n--- Testing GET /agentSkills ---");
+        const allResponse = await fetch(`${baseURL}/api/v1/agentSkills`);
+        const allSkills = await allResponse.json();
+        console.log(
+            "Status:",
+            allResponse.status,
+            "Count:",
+            Array.isArray(allSkills) ? allSkills.length : 0,
+        );
+
+        // 2. Test GET agent skill by ID
+        console.log("\n--- Testing GET /agentSkills/:id ---");
+        const skillId = "1";
+        const getByIdResponse = await fetch(
+            `${baseURL}/api/v1/agentSkills/${skillId}`,
+        );
+        console.log(
+            "Status:",
+            getByIdResponse.status,
+            await getByIdResponse.json(),
+        );
+
+        // 3. Test CREATE agent skill
+        console.log("\n--- Testing POST /agentSkills ---");
+        const createResponse = await fetch(`${baseURL}/api/v1/agentSkills`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                agentId: agentId,
+                skillName: "communication",
+                isAllowed: true,
+                status: "active",
+            }),
+        });
+        const createdData = await createResponse.json();
+        console.log("Status:", createResponse.status);
+        if (createResponse.ok) {
+            console.log("Response:", createdData);
+            const newSkillId = createdData.id || "1";
+
+            // 4. Test UPDATE agent skill
+            console.log("\n--- Testing PUT /agentSkills/:id ---");
+            const updateResponse = await fetch(
+                `${baseURL}/api/v1/agentSkills/${newSkillId}`,
+                {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        agentId: agentId,
+                        skillName: "communication",
+                        isAllowed: false,
+                        status: "inactive",
+                    }),
+                },
+            );
+            console.log(
+                "Status:",
+                updateResponse.status,
+                await updateResponse.json(),
+            );
+
+            // 5. Test DELETE agent skill
+            console.log("\n--- Testing DELETE /agentSkills/:id ---");
+            const deleteResponse = await fetch(
+                `${baseURL}/api/v1/agentSkills/${newSkillId}`,
+                {
+                    method: "DELETE",
+                },
+            );
+            console.log(
+                "Status:",
+                deleteResponse.status,
+                await deleteResponse.json(),
+            );
+        } else {
+            console.log("Error:", createdData);
+        }
+    } catch (error) {
+        console.error("🚨 Agent Skills test failed:", error);
+    }
+}
 
 // Run specific test based on command line argument
 const args = process.argv.slice(2);
@@ -145,4 +244,8 @@ if (testType === "agents" || testType === "all") {
 
 if (testType === "action-logs" || testType === "all") {
     await testActionLogs();
+}
+
+if (testType === "agent-skills" || testType === "all") {
+    await testAgentSkills();
 }
