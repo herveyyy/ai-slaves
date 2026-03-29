@@ -2,7 +2,7 @@
 
 import { ActionLogsController } from "./controllers/actionLogs/actionLogs.controller";
 import { AgentSkillsController } from "./controllers/agentSkills/agentSkills.controller";
-import { MemoriesController } from "./controllers/memories";
+import { MemoriesController } from "./controllers/memories/memories.controller";
 import { ProcessesController } from "./controllers/processes";
 import { AgentsController } from "./controllers/agents/agents.controller";
 import { AgentsService } from "./services/agents.service";
